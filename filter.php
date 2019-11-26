@@ -55,7 +55,7 @@ class filter_h5p extends moodle_text_filter {
             //$link = $OUTPUT->render_from_template('filter_h5p/link', $params);
             $embed = $OUTPUT->render_from_template('filter_h5p/embed', $params);
 
-            $text = str_replace('{h5p:' . $cm->name . '}', $embed, $text);
+            $text = str_replace('{h5p:' . $cm->name . '}', $embed, htmlspecialchars_decode($text));
         }
 
         return $text;
