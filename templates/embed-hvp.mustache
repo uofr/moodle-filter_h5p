@@ -41,3 +41,22 @@
     {{url}}
 </iframe>
 <script src="{{wwwroot}}/mod/hvp/library/js/h5p-resizer.js" charset="UTF-8"></script>
+
+{{#js}}
+  var delayInMilliseconds = 3000; //3 seconds
+  setTimeout(function() {
+
+    var iframes = document.getElementsByTagName('iframe');
+    
+    for (var i = 0; i < iframes.length; i++) {
+      if (iframes[i].src == "{{wwwroot}}/mod/hvp/embed.php?id={{id}}") { 
+        if( ! document.getElementsByTagName('iframe')[i].style.height){
+          iframes[i].setAttribute("src","{{wwwroot}}/mod/hvp/embed.php?id={{id}}");
+          var script = document.createElement('script');
+          script.src = "{{wwwroot}}/mod/hvp/library/js/h5p-resizer.js";
+          document.getElementsByTagName('head')[0].appendChild(script);
+        }
+      }
+    }
+  }, delayInMilliseconds);
+{{/js}}
