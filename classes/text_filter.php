@@ -55,7 +55,7 @@ class text_filter extends \core_filters\text_filter {
                     $moduleinstance = $manager->get_instance();
                     $context = $manager->get_context();
                     // Convert display options to a valid object.
-                    $factory = new core_h5p\factory();
+                    $factory = new \core_h5p\factory();
                     $core = $factory->get_core();
                     $config = \core_h5p\helper::decode_display_options($core, $moduleinstance->displayoptions);
 
