@@ -14,33 +14,26 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+namespace filter_h5p;
+
 defined('MOODLE_INTERNAL') || die;
 
 /**
  * This is the filter itself.
+ * Function filter replaces any h5p-sources.
  *
  * @package    filter_h5p
- * @copyright  2018 Digital Education Society (http://www.dibig.at)
+ * @copyright  2025 Austrian Federal Ministry of Education
  * @author     Robert Schrenk
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class filter_h5p extends moodle_text_filter {
-    /**
-     * Function filter replaces any h5p-sources.
-     */
+class text_filter extends \core_filters\text_filter {
     public function filter($text, array $options = array()) {
-        global $CFG, $DB, $COURSE, $OUTPUT;
-
-        if (empty($COURSE->id) || $COURSE->id == 0) {
+        global $CFG, $COURSE, $OUTPUT;
+        if (strpos($text, "{h5p:") === false)
             return $text;
-        }
-        if (strpos($text, '{h5p:') === false) {
-            return $text;
-        }
-
         $modinfo = get_fast_modinfo($COURSE);
         $cms = $modinfo->get_cms();
-
         foreach ($cms as $cm) {
             if ($cm->modname != 'hvp' && $cm->modname != 'h5pactivity') {
                 continue;
@@ -54,7 +47,7 @@ class filter_h5p extends moodle_text_filter {
             switch ($cm->modname) {
                 case 'hvp':
                     $embed = $OUTPUT->render_from_template('filter_h5p/embed-hvp', $params);
-                break;
+                    break;
                 case 'h5pactivity':
                     // This part is from core-Moodle /mod/h5pactivity/view.php
                     // --------------------------
@@ -62,7 +55,7 @@ class filter_h5p extends moodle_text_filter {
                     $moduleinstance = $manager->get_instance();
                     $context = $manager->get_context();
                     // Convert display options to a valid object.
-                    $factory = new core_h5p\factory();
+                    $factory = new \core_h5p\factory();
                     $core = $factory->get_core();
                     $config = \core_h5p\helper::decode_display_options($core, $moduleinstance->displayoptions);
 
@@ -71,14 +64,14 @@ class filter_h5p extends moodle_text_filter {
                     $files = $fs->get_area_files($context->id, 'mod_h5pactivity', 'package', 0, 'id', false);
                     $file = reset($files);
                     $fileurl = \moodle_url::make_pluginfile_url($file->get_contextid(), $file->get_component(),
-                                        $file->get_filearea(), $file->get_itemid(), $file->get_filepath(),
-                                        $file->get_filename(), false);
+                        $file->get_filearea(), $file->get_itemid(), $file->get_filepath(),
+                        $file->get_filename(), false);
 
                     $h5pparams = [
-                            'url' => $fileurl,
-                            'preventredirect' => true,
-                            'component' => '', //$component,
-                        ];
+                        'url' => $fileurl,
+                        'preventredirect' => true,
+                        'component' => '', //$component,
+                    ];
 
                     $optparams = ['frame', 'export', 'embed', 'copyright'];
                     foreach ($optparams as $optparam) {
@@ -88,19 +81,14 @@ class filter_h5p extends moodle_text_filter {
                     }
                     $fileurl = new \moodle_url('/h5p/embed.php', $h5pparams);
                     $params->embedurl = $fileurl->out(false);
-
                     // --------------------------
                     // This is again the filter plugin.
                     $embed = $OUTPUT->render_from_template('filter_h5p/embed-h5p', $params);
-                break;
+                    break;
             }
-
             //$link = $OUTPUT->render_from_template('filter_h5p/link', $params);
-
-
             $text = str_replace('{h5p:' . $cm->name . '}', $embed, $text);
         }
-
         return $text;
     }
 }
