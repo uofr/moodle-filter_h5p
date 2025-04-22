@@ -22,7 +22,7 @@ defined('MOODLE_INTERNAL') || die;
  * This is the filter itself.
  * Function filter replaces any h5p-sources.
  *
- * @package    filter_faq
+ * @package    filter_h5p
  * @copyright  2025 Austrian Federal Ministry of Education
  * @author     Robert Schrenk
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
