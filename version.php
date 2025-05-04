@@ -25,8 +25,8 @@
 
 defined('MOODLE_INTERNAL') || die;
 
-$plugin->version  = 2021062200;
-$plugin->requires = 2019052000;
+$plugin->version  = 2025040200;
+$plugin->requires = 2024100700;
 $plugin->component = 'filter_h5p';
-$plugin->release = '1.2 (Build: 2021062200)';
+$plugin->release = '1.2 (Build: 2025040200)';
 $plugin->maturity = MATURITY_STABLE;
