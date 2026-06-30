@@ -87,7 +87,7 @@ class text_filter extends \core_filters\text_filter {
                     break;
             }
             //$link = $OUTPUT->render_from_template('filter_h5p/link', $params);
-            $text = str_replace('{h5p:' . $cm->name . '}', $embed, $text);
+            $text = str_replace('{h5p:' . $cm->name . '}', $embed, htmlspecialchars_decode($text));
         }
         return $text;
     }
